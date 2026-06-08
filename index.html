@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Console</title>
+    <style>
+        /* This centers your screen and sets up the spooky retro styling */
+        body {
+            background-color: #0d0d0d;
+            color: #39ff14; /* Retro neon green */
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* This is the placeholder for your monitor artwork or display box */
+        #monitor {
+            width: 80%;
+            max-width: 600px;
+            height: 300px;
+            border: 3px solid #39ff14;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            background-color: #000;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+        }
+
+        /* Styling for the text box your players type into */
+        #computerInput {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #39ff14;
+            color: #39ff14;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            padding: 5px;
+            width: 250px;
+            outline: none;
+        }
+
+        /* Styling for the execution button */
+        button {
+            background-color: #39ff14;
+            color: black;
+            border: none;
+            padding: 7px 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        button:hover {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. The Screen where answers will appear -->
+    <div id="monitor">
+        <p>SYSTEM BOOT COMPLETE...</p>
+        <p>ENTER PASSWORD TO ACCESS FILES.</p>
+    </div>
+
+    <!-- 2. The Input Area where users type -->
+    <div id="input-container">
+        <span>> </span>
+        <input type="text" id="computerInput" placeholder="Type password..." autofocus>
+        <button onclick="checkCode()">SUBMIT</button>
+    </div>
+
+    <!-- 3. The JavaScript that handles the logic -->
+    <script>
+        // This function runs automatically whenever someone presses the 'Enter' key
+        document.getElementById("computerInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkCode();
+            }
+        });
+
+        function checkCode() {
+            // Grab the typed words, make it lowercase, remove extra spaces
+            const code = document.getElementById("computerInput").value.toLowerCase().trim();
+            const monitor = document.getElementById("monitor");
+
+            // Simple code logic
+            if (code === "hello") {
+                monitor.innerHTML = "<p>> SYSTEM: Welcome, Creator. Secret file unlocked.</p>";
+            } else if (code === "secret") {
+                monitor.innerHTML = "<p>> SYSTEM: [CLASSIFIED INFORMATION REDACTED]</p>";
+            } else if (code === "") {
+                monitor.innerHTML += "<p>> ERROR: Input cannot be empty.</p>";
+            } else {
+                monitor.innerHTML += `<p>> ERROR: '${code}' is an invalid command.</p>`;
+            }
+
+            // Clear the input box after submitting so they can type again
+            document.getElementById("computerInput").value = "";
+            
+            // Auto-scrolls the monitor to the bottom so players see new text
+            monitor.scrollTop = monitor.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
