@@ -112,7 +112,7 @@
                 monitor.innerHTML += "<p>> SYSTEM: I bet you're fun at parties. Please for the love of god type something meaningful.</p>";
             } else if (code === "something meaningful") {
                 monitor.innerHTML += "<p>> SYSTEM: 01001111 01101000 00100000 01101110 01101001 01100011 01100101 00101100 00100000 01111001 01101111 01110101 00100000 01100100 01101001 01100100 00100000 01110011 01101111 01101101 01100101 00100000 01100100 01100101 01100011 01101001 01110000 01101000 01100101 01110010 01101001 01101110 01100111 00100001</p>";
-            } else if (code === "board" || code === "opera") {
+            } else if (code === "board" || code === "chess") {
                 puzzleStage = 1; 
                 monitor.innerHTML += `<p>> SYSTEM: PUZZLE - THE OPERA HOUSE</p> <p>White to move.</p>
                 <pre style="color: #39ff14; font-family: 'Courier New', Courier, monospace; line-height: 1.4; font-size: 1.1rem; letter-spacing: 0px; margin: 10px 0;">
@@ -133,7 +133,7 @@
                 puzzleStage = 2; 
                 monitor.innerHTML += `
                 <p>> SYSTEM: CRITICAL HIT! Black is forced to capture with 'Nxb8'.</p>
-                <p>> SYSTEM: Now, enter the final crushing move coordinate to deliver mate (e.g., 'rd8#').</p>
+                <p>> SYSTEM: Now, enter the final crushing move coordinate to deliver mate.</p>
                 `;
             } else if ((code === "rd8#" || code === "rd8") && puzzleStage === 2) {
                 puzzleStage = 0; 
