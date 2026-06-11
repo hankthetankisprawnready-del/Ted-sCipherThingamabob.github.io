@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Console</title>
     <style>
-        /* This centers your screen and sets up the spooky retro styling */
         body {
             background-color: #0d0d0d;
-            color: #39ff14; /* Retro neon green */
+            color: #39ff14; 
             font-family: 'Courier New', Courier, monospace;
             display: flex;
             flex-direction: column;
@@ -16,9 +15,8 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
-
-        /* This is the placeholder for your monitor artwork or display box */
         #monitor {
             width: 80%;
             max-width: 600px;
@@ -29,9 +27,8 @@
             overflow-y: auto;
             background-color: #000;
             box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
-        /* Styling for the text box your players type into */
         #computerInput {
             background: transparent;
             border: none;
@@ -43,8 +40,6 @@
             width: 250px;
             outline: none;
         }
-
-        /* Styling for the execution button */
         button {
             background-color: #39ff14;
             color: black;
@@ -55,59 +50,102 @@
             cursor: pointer;
             margin-left: 10px;
         }
-
         button:hover {
             background-color: #fff;
+        }
+        .shake-error {
+            animation: shake 0.3s ease-in-out;
+            border-color: #ff3333 !important;
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.7) !important;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-8px, 5px); }
+            40% { transform: translate(8px, -5px); }
+            60% { transform: translate(-5px, -3px); }
+            80% { transform: translate(6px, 4px); }
+            100% { transform: translate(0, 0); }
         }
     </style>
 </head>
 <body>
-
-    <!-- 1. The Screen where answers will appear -->
     <div id="monitor">
         <p>SYSTEM BOOT COMPLETE...</p>
         <p>ENTER PASSWORD TO ACCESS FILES.</p>
     </div>
-
-    <!-- 2. The Input Area where users type -->
     <div id="input-container">
         <span>> </span>
         <input type="text" id="computerInput" placeholder="Type password..." autofocus>
         <button onclick="checkCode()">SUBMIT</button>
     </div>
-
-    <!-- 3. The JavaScript that handles the logic -->
     <script>
-        // This function runs automatically whenever someone presses the 'Enter' key
+        let puzzleStage = 0;
+
         document.getElementById("computerInput").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 checkCode();
             }
         });
 
+        function triggerError(monitorElement, messageHTML) {
+            monitorElement.innerHTML += messageHTML;
+            monitorElement.classList.add("shake-error");
+            setTimeout(() => {
+                monitorElement.classList.remove("shake-error");
+            }, 300);
+        }
+
         function checkCode() {
-            // Grab the typed words, make it lowercase, remove extra spaces
-            const code = document.getElementById("computerInput").value.toLowerCase().trim();
+            const inputField = document.getElementById("computerInput");
+            const rawInput = inputField.value;
+            const code = rawInput.toLowerCase().trim(); 
             const monitor = document.getElementById("monitor");
-
-            // Simple code logic
+            monitor.innerHTML += `<p style="color: #ffffff; margin: 5px 0;">> ???: ${code}</p>`;
             if (code === "hello") {
-                monitor.innerHTML = "<p>> SYSTEM: Welcome, Creator. Secret file unlocked.</p>";
+                monitor.innerHTML += "<p>> SYSTEM: Sup dawg.</p>";
             } else if (code === "secret") {
-                monitor.innerHTML = "<p>> SYSTEM: [CLASSIFIED INFORMATION REDACTED]</p>";
+                monitor.innerHTML += "<p>> SYSTEM: no sh*t it's secret sherlock.</p>";
+            } else if (code === "password") {
+                monitor.innerHTML += "<p>> SYSTEM: Haha. Very funny. Now type an actual password.</p>";
+            } else if (code === "an actual password") {
+                monitor.innerHTML += "<p>> SYSTEM: I bet you're fun at parties. Please for the love of god type something meaningful.</p>";
+            } else if (code === "something meaningful") {
+                monitor.innerHTML += "<p>> SYSTEM: 01001111 01101000 00100000 01101110 01101001 01100011 01100101 00101100 00100000 01111001 01101111 01110101 00100000 01100100 01101001 01100100 00100000 01110011 01101111 01101101 01100101 00100000 01100100 01100101 01100011 01101001 01110000 01101000 01100101 01110010 01101001 01101110 01100111 00100001</p>";
+            } else if (code === "board" || code === "opera") {
+                puzzleStage = 1; 
+                monitor.innerHTML += `<p>> SYSTEM: PUZZLE - THE OPERA HOUSE</p> <p>White to move.</p>
+                <pre style="color: #39ff14; font-family: 'Courier New', Courier, monospace; line-height: 1.4; font-size: 1.1rem; letter-spacing: 0px; margin: 10px 0;">
+   a   b   c   d   e   f   g   h
+8 [.] [.] [.] [.] [k] [b] [.] [r] 8
+7 [p] [.] [.] [n] [.] [p] [p] [p] 7
+6 [.] [.] [.] [.] [q] [.] [.] [.] 6
+5 [.] [.] [.] [.] [p] [.] [B] [.] 5
+4 [.] [.] [.] [.] [P] [.] [.] [.] 4
+3 [.] [Q] [.] [.] [.] [.] [.] [.] 3
+2 [P] [P] [P] [.] [.] [P] [P] [P] 2
+1 [.] [.] [K] [R] [.] [.] [.] [.] 1
+   a   b   c   d   e   f   g   h
+                </pre>
+                <p>> LEGEND: [r,n,b,q,k,p] = Black | [R,N,B,Q,K,P] = White</p>
+                `;
+            } else if ((code === "qb8+" || code === "qb8") && puzzleStage === 1) {
+                puzzleStage = 2; 
+                monitor.innerHTML += `
+                <p>> SYSTEM: CRITICAL HIT! Black is forced to capture with 'Nxb8'.</p>
+                <p>> SYSTEM: Now, enter the final crushing move coordinate to deliver mate (e.g., 'rd8#').</p>
+                `;
+            } else if ((code === "rd8#" || code === "rd8") && puzzleStage === 2) {
+                puzzleStage = 0; 
+                monitor.innerHTML += "<p>> SYSTEM: CHECKMATE! You have recreated Morphy's masterpiece. File unlocked: 'OPERA'.</p>";
             } else if (code === "") {
-                monitor.innerHTML += "<p>> ERROR: Input cannot be empty.</p>";
+                triggerError(monitor, "<p>> ERROR: Input cannot be empty.</p>");
             } else {
-                monitor.innerHTML += `<p>> ERROR: '${code}' is an invalid command.</p>`;
+                triggerError(monitor, `<p>> ERROR: '${code}' is an invalid command.</p>`);
             }
-
-            // Clear the input box after submitting so they can type again
-            document.getElementById("computerInput").value = "";
-            
-            // Auto-scrolls the monitor to the bottom so players see new text
+            inputField.value = "";
             monitor.scrollTop = monitor.scrollHeight;
         }
     </script>
-
 </body>
 </html>
